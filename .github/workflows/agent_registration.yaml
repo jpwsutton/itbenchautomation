@@ -31,9 +31,9 @@ jobs:
 
             ## Agent Details:
 
-            Name:  ${{ fromJson(steps.parse.outputs.payload)["Agent Name"] }}
-            Type:  ${{ fromJson(steps.parse.outputs.payload)["Agent Type"] }}
-            Level:  ${{ fromJson(steps.parse.outputs.payload)["Agent Level"] }}
+            Name:  ${{ fromJson(steps.parse.outputs.payload)['Agent Name'] }}
+            Type:  ${{ fromJson(steps.parse.outputs.payload)['Agent Type'] }}
+            Level:  ${{ fromJson(steps.parse.outputs.payload)['Agent Level'] }}
         
         with:
           script: |
