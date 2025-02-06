@@ -14,7 +14,7 @@ jobs:
       id: parse
       uses: onmax/issue-form-parser@v1.6
       with:
-        issue_number: ${{ github.event.issue.number }}\
+        issue_number: ${{ github.event.issue.number }}
     # Examples on how to use the output
     - name: Show parsed payload data
       run: |
