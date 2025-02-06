@@ -11,7 +11,7 @@ body:
   - type: input
     id: agent-owner-email
     attributes:
-      label: Your email Address
+      label: Contact
       description: Who should be the main point of contact for this agent?
       placeholder: you@somewhere.com
     validations:
@@ -19,7 +19,7 @@ body:
   - type: input
     id: agent-name
     attributes:
-      label: The name or ID of the agent
+      label: Agent Name
       placeholder: my-itbench-agent
     validations:
       required: true
@@ -50,7 +50,7 @@ body:
   - type: checkboxes
     id: scenario-categories
     attributes:
-      label: Which scenario categories should be used
+      label: Agent Scenarios
       description: You may select more than one, options not applicable to the agent type will be ignored.
       options:
         - label: (SRE) resource unavailability

@@ -10,15 +10,42 @@ jobs:
     runs-on: ubuntu-latest
     name: Registers an Agent
     steps:
-    - name: Parse issue
-      id: parse
-      uses: onmax/issue-form-parser@v1.6
-      with:
-        issue_number: ${{ github.event.issue.number }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    # Examples on how to use the output
-    - name: Show parsed payload data
-      run: |
-        # Using the character `'` to prevent all characters enclosed within
-        # them from being treated as special characters (e.g. $ or `)
-        echo '${{ steps.parse.outputs.payload }}'
+      - name: Parse issue
+        id: parse
+        uses: onmax/issue-form-parser@v1.6
+        with:
+          issue_number: ${{ github.event.issue.number }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # Examples on how to use the output
+      - name: Show parsed payload data
+        run: |
+          echo '${{ steps.parse.outputs.payload }}'
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            👋 ${{ github.event.issue.user.login }}
+
+            Thank you for submitting your agent registration details, we are currently processing your request and will
+            be in contact shortly with connection details for your agent harness to use to connect to the IT Bench service.
+
+            ## Agent Details:
+
+            Name:  ${{ fromJson(steps.parse.outputs.payload)["Agent Name"] }}
+            Type:  ${{ fromJson(steps.parse.outputs.payload)["Agent Type"] }}
+            Level:  ${{ fromJson(steps.parse.outputs.payload)["Agent Level"] }}
+        
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['registering']
+            })
