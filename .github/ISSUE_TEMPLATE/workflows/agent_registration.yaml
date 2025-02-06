@@ -1,0 +1,26 @@
+name: Register a new agent
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  register_agent:
+    if: github.event.label.name == "approved"
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Registers an Agent
+    steps:
+    - name: Parse issue
+      id: parse
+      uses: onmax/issue-form-parser@v1.6.0
+      with:
+        issue_number: ${{ github.event.issue.number }}\
+    # Examples on how to use the output
+    - name: Show parsed payload data
+      run: |
+        # Using the character `'` to prevent all characters enclosed within
+        # them from being treated as special characters (e.g. $ or `)
+        echo '${{ steps.parse.outputs.payload }}'
+
+        # Print the value of the "agnet-name" field
+        echo '${{ fromJson(steps.parse.outputs.payload)["agent-name"] }}'

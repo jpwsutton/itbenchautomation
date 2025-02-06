@@ -1,0 +1,64 @@
+name: IT Bench Agent Registration
+description: Register your IT Bench Agent for benchmarking
+title: "[Registration]: < agent name here >"
+labels: ["registration", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for your interest in benchmarking an IT Bench Agent. 
+        Please fill out this form to request connection details for the IT Bench service.
+  - type: input
+    id: agent-owner-email
+    attributes:
+      label: Your email Address
+      description: Who should be the main point of contact for this agent?
+      placeholder: you@somewhere.com
+    validations:
+      required: true
+  - type: input
+    id: agent-name
+    attributes:
+      label: The name or ID of the agent
+      placeholder: my-itbench-agent
+    validations:
+      required: true
+  - type: dropdown
+    id: agent-type
+    attributes:
+      label: Agent Type
+      description: What type of agent is this?
+      options:
+        - SRE
+        - CISO
+        - FinOps
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: agent-level
+    attributes:
+      label: Agent Level
+      description: What level of agent is this?
+      options:
+        - Beginner
+        - Intermediate
+        - Expert
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: scenario-categories
+    attributes:
+      label: Which scenario categories should be used
+      description: You may select more than one, options not applicable to the agent type will be ignored.
+      options:
+        - label: (SRE) resource unavailability
+        - label: (CISO) Kubernetes in Kyverno
+        - label: (CISO) Kubernetes in OPA
+        - label: (CISO) Kubernetes in Kyverno Update
+        - label: (CISO) RHEL9 in OPA
+        - label: (FinOps) Something
+  - type: markdown
+    attributes:
+      value: Thank you for completing this form, we will review your request shortly.
