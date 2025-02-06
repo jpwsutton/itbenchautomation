@@ -15,6 +15,7 @@ jobs:
       uses: onmax/issue-form-parser@v1.6
       with:
         issue_number: ${{ github.event.issue.number }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     # Examples on how to use the output
     - name: Show parsed payload data
       run: |
