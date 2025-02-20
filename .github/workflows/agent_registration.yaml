@@ -82,7 +82,7 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           repo_full_path="repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}"
-          gh api $repo_full_path
+          gh api $repo_full_path -q '.private'
 
       - name: Push manifest to config repository
         id: file-push
