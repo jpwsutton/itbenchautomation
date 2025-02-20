@@ -25,7 +25,7 @@ jobs:
         id: generatemanifest
         run: |
           manifest=$(jq -n --arg token "deadbeefcafe" --arg endpoint "https://ibm.com" '{token: $token, endpoint: $endpoint}')
-          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "manifest=$( echo $manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
           agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
           agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
           agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
@@ -49,7 +49,7 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           gh api octocat
-          manifest_content=$(echo ${{ steps.generatemanifest.outputs.manifest}} | base64 -w 0)
+          
           gh api -X PUT \
           -H "Accept application/vnd.github.v3+json" \
           "repos/${{ steps.generatemanifest.outputs.agent_repo_owner}}/${{ steps.generatemanifest.outputs.agent_repo_name}}/contents/agent-manifest.json" \
