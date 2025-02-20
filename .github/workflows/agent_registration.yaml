@@ -83,13 +83,18 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           gh api octocat
+
+          repo_full_path="repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}/contents/agent-manifest.json"
+
+          current_sha=$(gh api $repo_full_path -q '.sha' || echo "")
           
           gh api -X PUT \
           -H "Accept: application/vnd.github.v3+json" \
-          "repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}/contents/agent-manifest.json" \
+          $repo_full_path \
           -f message="Add agent-manifest.json via API" \
           -f content="${{ steps.generate-manifest.outputs.manifest}}" \
-          -f branch="main" >> gh_out.json
+          -f branch="main" >> gh_out.json \ 
+          -f sha=$current_sha
 
           file_path=$(cat gh_out.json | jq .content.html_url)
 
