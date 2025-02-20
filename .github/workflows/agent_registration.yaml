@@ -26,9 +26,11 @@ jobs:
         run: |
           echo "manifest_token=deadbeefcafe" >> "$GITHUB_OUTPUT"
           echo "manifest_endpoint=https://ibm.com" >> "$GITHUB_OUTPUT"
-          agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}""
+          agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
           agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
           agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
+          echo $agent_repo_owner
+          echo $agent_repo_name
           echo "agent_repo_owner=$agent_repo_owner" >> "$GITHUB_OUTPUT"
           echo "agent_repo_name=$agent_repo_name" >> "$GITHUB_OUTPUT"
 
