@@ -102,16 +102,15 @@ jobs:
           -f sha="$current_sha" >> ghout.json
 
           if [[ $? -eq 0 ]]; then
-            cat ghout.json
+            cat ghout.json | jq
+
+
+            file_path=$(cat ghout.json | jq .content.html_url)
+            echo "File path: $file_path"
+
+            echo "manifest_path=$file_path" >> "$GITHUB_OUTPUT"
           fi
 
-
-
-          #file_path=$(cat gh_out.json | jq .content.html_url)
-
-          #echo "File path: $file_path"
-
-          #echo "manifest_path=$file_path" >> "$GITHUB_OUTPUT"
 
 
 
