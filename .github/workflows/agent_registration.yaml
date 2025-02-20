@@ -51,7 +51,7 @@ jobs:
           gh api octocat
           
           gh api -X PUT \
-          -H "Accept application/vnd.github.v3+json" \
+          -H "Accept: application/vnd.github.v3+json" \
           "repos/${{ steps.generatemanifest.outputs.agent_repo_owner}}/${{ steps.generatemanifest.outputs.agent_repo_name}}/contents/agent-manifest.json" \
           -f message="Add agent-manifest.json via API" \
           -f content="${{ steps.generatemanifest.outputs.manifest}}" \
