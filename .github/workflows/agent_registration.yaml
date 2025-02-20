@@ -40,8 +40,8 @@ jobs:
         with:
           app-id: ${{ vars.ITBENCH_APP_ID }}
           private-key: ${{ secrets.ITBENCH_APP_KEY }}
-          owner: ${{ steps.generatemanifest.output.agent_repo_owner}}
-          repositories: ${{ steps.generatemanifest.output.agent_repo_name}}
+          owner: ${{ steps.generatemanifest.outputs.agent_repo_owner}}
+          repositories: ${{ steps.generatemanifest.outputs.agent_repo_name}}
 
 
       - name: Use the token
