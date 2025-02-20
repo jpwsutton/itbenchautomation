@@ -93,19 +93,22 @@ jobs:
           
           echo "Current SHA: $current_sha"
 
-          gh api -X PUT \
+          ghout=$(gh api -X PUT \
           -H "Accept: application/vnd.github.v3+json" \
           $repo_full_path \
           -f message="Add agent-manifest.json via API" \
           -f content="${{ steps.generate-manifest.outputs.manifest}}" \
           -f branch="main" \ 
-          -f sha="$current_sha" >> gh_out.json
+          -f sha="$current_sha")
 
-          file_path=$(cat gh_out.json | jq .content.html_url)
+          echo $ghout
 
-          echo "File path: $file_path"
 
-          echo "manifest_path=$file_path" >> "$GITHUB_OUTPUT"
+          #file_path=$(cat gh_out.json | jq .content.html_url)
+
+          #echo "File path: $file_path"
+
+          #echo "manifest_path=$file_path" >> "$GITHUB_OUTPUT"
 
 
 
