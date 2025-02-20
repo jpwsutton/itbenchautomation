@@ -99,7 +99,11 @@ jobs:
           -f message="Add agent-manifest.json via API" \
           -f content="${{ steps.generate-manifest.outputs.manifest}}" \
           -f branch="main" \
-          -f sha="$current_sha"
+          -f sha="$current_sha" >> ghout.json
+
+          if [[ $? -eq 0 ]]; then
+            cat ghout.json
+          fi
 
 
 
