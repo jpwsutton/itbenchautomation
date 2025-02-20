@@ -122,7 +122,7 @@ jobs:
 
             The registration of your agent is now complete.
 
-            Your agent manifest is located at: ${{ steps.file-push.output.manifest_path}}
+            Your agent manifest is located at: ${{ steps.file-push.outputs.manifest_path}}
 
 
             ## Agent Details:
