@@ -22,7 +22,7 @@ jobs:
         run: |
           echo '${{ steps.parse.outputs.payload }}'
       - name: mock-generate-manifest
-        id: generate-manifest
+        id: generatemanifest
         run: |
           echo "manifest_token=deadbeefcafe" >> "$GITHUB_OUTPUT"
           echo "manifest_endpoint=https://ibm.com" >> "$GITHUB_OUTPUT"
@@ -40,8 +40,8 @@ jobs:
         with:
           app-id: ${{ vars.ITBENCH_APP_ID }}
           private-key: ${{ secrets.ITBENCH_APP_KEY }}
-          owner: ${{ steps.generate-manifest.output.agent_repo_owner}}
-          repositories: ${{ steps.generate-manifest.output.agent_repo_name}}
+          owner: ${{ steps.generatemanifest.output.agent_repo_owner}}
+          repositories: ${{ steps.generatemanifest.output.agent_repo_name}}
 
 
       - name: Use the token
