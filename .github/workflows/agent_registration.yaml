@@ -20,6 +20,25 @@ jobs:
       - name: Show parsed payload data
         run: |
           echo '${{ steps.parse.outputs.payload }}'
+      - name: mock-generate-manifest
+        id: mock-generate-manifest
+        run: |
+          echo "manifest_token=deadbeefcafe" >> "$GITHUB_OUTPUT"
+          echo "manifest_endpoint=https://ibm.com" >> "$GITHUB_OUTPUT"
+
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.ITBENCH_APP_ID }}
+          private-key: ${{ secrets.ITBENCH_APP_KEY }}
+
+      - name: Use the token
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh api octocat
+
       - name: Comment on issue
         uses: actions/github-script@v7
         env:
@@ -34,6 +53,8 @@ jobs:
             Name:  ${{ fromJson(steps.parse.outputs.payload)['Agent Name'] }}
             Type:  ${{ fromJson(steps.parse.outputs.payload)['Agent Type'] }}
             Level:  ${{ fromJson(steps.parse.outputs.payload)['Agent Level'] }}
+
+            Target Config Repo: ${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}
         
         with:
           script: |
