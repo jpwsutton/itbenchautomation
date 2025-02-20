@@ -158,4 +158,35 @@ jobs:
               repo: context.repo.repo,
               body: process.env.COMMENT_BODY
             })
+
+      - name: Report Failure
+        if: failure()
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            👋 ${{ github.event.issue.user.login }}
+
+            Unfortunately there was an issue with registering the agent. 
+
+            This issue has been marked for manual intervention and the team has been notified.
+
+            ----
+
+            Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['error']
+            })
+        
             
