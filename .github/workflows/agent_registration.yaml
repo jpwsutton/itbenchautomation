@@ -82,7 +82,17 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           repo_full_path="repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}"
-          gh api $repo_full_path -q '.private'
+          repo_private=$(gh api $repo_full_path -q '.private')
+
+          echo "Repo Private: $repo_private"
+
+          if [ "$repo_private" = "true" ]; then
+            echo "Target repository is set to private."
+          else
+            echo "Target repository is not set to private. Failing!"
+            exit 1
+          fi
+
 
       - name: Push manifest to config repository
         id: file-push
