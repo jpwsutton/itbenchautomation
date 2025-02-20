@@ -97,8 +97,8 @@ jobs:
           $repo_full_path \
           -f message="Add agent-manifest.json via API" \
           -f content="${{ steps.generate-manifest.outputs.manifest}}" \
-          -f branch="main" >> gh_out.json \ 
-          -f sha=$current_sha
+          -f branch="main" \ 
+          -f sha=$current_sha  >> gh_out.json
 
           file_path=$(cat gh_out.json | jq .content.html_url)
 
