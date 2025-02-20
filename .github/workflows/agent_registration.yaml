@@ -21,42 +21,6 @@ jobs:
       - name: Show parsed payload data
         run: |
           echo '${{ steps.parse.outputs.payload }}'
-      - name: mock-generate-manifest
-        id: generatemanifest
-        run: |
-          manifest=$(jq -n --arg token "deadbeefcafe" --arg endpoint "https://ibm.com" '{token: $token, endpoint: $endpoint}')
-          echo "manifest=$( echo $manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
-          agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
-          agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
-          agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
-          echo $agent_repo_owner
-          echo $agent_repo_name
-          echo "agent_repo_owner=$agent_repo_owner" >> "$GITHUB_OUTPUT"
-          echo "agent_repo_name=$agent_repo_name" >> "$GITHUB_OUTPUT"
-
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.ITBENCH_APP_ID }}
-          private-key: ${{ secrets.ITBENCH_APP_KEY }}
-          owner: ${{ steps.generatemanifest.outputs.agent_repo_owner}}
-          repositories: ${{ steps.generatemanifest.outputs.agent_repo_name}}
-
-
-      - name: Use the token
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-        run: |
-          gh api octocat
-          
-          gh api -X PUT \
-          -H "Accept: application/vnd.github.v3+json" \
-          "repos/${{ steps.generatemanifest.outputs.agent_repo_owner}}/${{ steps.generatemanifest.outputs.agent_repo_name}}/contents/agent-manifest.json" \
-          -f message="Add agent-manifest.json via API" \
-          -f content="${{ steps.generatemanifest.outputs.manifest}}" \
-          -f branch="main"
-
       - name: Comment on issue
         uses: actions/github-script@v7
         env:
@@ -88,3 +52,76 @@ jobs:
               repo: context.repo.repo,
               labels: ['registering']
             })
+      - name: mock-generate-manifest
+        id: generate-manifest
+        run: |
+          manifest_token="this_is_a_placeholder_for_the_token"
+          manifest_endpoint="https://ibm.com"
+          manifest=$(jq -n --arg token $manifest_token --arg manifest_endpoint $manifest_endpoint '{token: $token, manifest_endpoint: $endpoint}')
+          echo "manifest=$( echo $manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
+          agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
+          agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
+          agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
+          echo $agent_repo_owner
+          echo $agent_repo_name
+          echo "agent_repo_owner=$agent_repo_owner" >> "$GITHUB_OUTPUT"
+          echo "agent_repo_name=$agent_repo_name" >> "$GITHUB_OUTPUT"
+
+      - name: Generate GitHub token on behalf of repo
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.ITBENCH_APP_ID }}
+          private-key: ${{ secrets.ITBENCH_APP_KEY }}
+          owner: ${{ steps.generate-manifest.outputs.agent_repo_owner}}
+          repositories: ${{ steps.generate-manifest.outputs.agent_repo_name}}
+
+
+      - name: Push manifest to config repository
+        id: file-push
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh api octocat
+          
+          gh api -X PUT \
+          -H "Accept: application/vnd.github.v3+json" \
+          "repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}/contents/agent-manifest.json" \
+          -f message="Add agent-manifest.json via API" \
+          -f content="${{ steps.generate-manifest.outputs.manifest}}" \
+          -f branch="main" >> gh_out.json
+
+          file_path=$(cat gh_out.json | jq .content.html_url)
+
+          echo "manifest_path=$file_path" >> "$GITHUB_OUTPUT"
+
+
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            👋 ${{ github.event.issue.user.login }}
+
+            The registration of your agent is now complete.
+
+            Your agent manifest is located at: ${{ steps.file-push.output.manifest_path}}
+
+
+            ## Agent Details:
+
+            Name:  ${{ fromJson(steps.parse.outputs.payload)['Agent Name'] }}
+            Type:  ${{ fromJson(steps.parse.outputs.payload)['Agent Type'] }}
+            Level:  ${{ fromJson(steps.parse.outputs.payload)['Agent Level'] }}
+
+            Target Config Repo: ${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}
+        
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+            
