@@ -76,6 +76,13 @@ jobs:
           owner: ${{ steps.generate-manifest.outputs.agent_repo_owner}}
           repositories: ${{ steps.generate-manifest.outputs.agent_repo_name}}
 
+      - name: Check repository is private
+        id: check-repo-private
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          repo_full_path="repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}/contents/agent-manifest.json"
+          gh api $repo_full_path
 
       - name: Push manifest to config repository
         id: file-push
