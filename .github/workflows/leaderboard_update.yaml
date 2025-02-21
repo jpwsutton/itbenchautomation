@@ -43,7 +43,7 @@ jobs:
         id: generate-readme
         env:
           CONTENT: |
-            # IT Bench Leaderboard\n\n
+            # IT Bench Leaderboard
 
             ${{steps.csv-to-markdown.outputs.markdown-table}}
         run: |
