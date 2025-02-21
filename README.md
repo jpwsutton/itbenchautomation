@@ -1,4 +1,4 @@
-# IT Bench Leaderboard\n\n
+# IT Bench Leaderboard
 
 | Year |  Score |  Title                                   |
 | ---- | ------ | ---------------------------------------- |
