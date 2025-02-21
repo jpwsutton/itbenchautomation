@@ -16,14 +16,27 @@ jobs:
           echo "Requesting Leaderboard data from API"
           # We would make a CURL request to the API to get the csv data here
           # For now, we'll just mock it
-          csv_data=$(curl https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.csv)
+        
 
-          echo "csv_data=$csv_data" >> "$GITHUB_OUTPUT"
+            if curl -o leaderboard.csv https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.csv; then
+              echo "CSV download successful."
+            else
+              echo "CSV download failed."
+              exit 1
+            fi
+
+      - name: Read CSV
+        id: csv
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./leaderboard.csv
+
+         
       - name: convert-csv-to-markdown
         id: csv-to-markdown
         uses: petems/csv-to-md-table-action@master
         with:
-          csvinput: ${{ steps.get-leaderboard-data.outputs.csv_data }}
+          csvinput: ${{ steps.csv.outputs.content }}
       - name: generate-readme
         id: generate-readme
         env:
