@@ -45,25 +45,21 @@ jobs:
 
             ${{steps.csv-to-markdown.outputs.markdown-table}}
         run: |
-          gh api octocat
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
-          repo_path = "repos/jpwsutton/itbenchautomation/contents/README.md"
+          echo $CONTENT > README.md
 
-          echo "Repo path: $repo_path"
+          git checkout main
 
-          current_sha=$(gh api $repo_full_path -q '.sha' || echo "")
+          git add README.md
+
+          git commit -m "Update leaderboard"
+
+          git push origin main
+
+
           
-          echo "Current SHA: $current_sha"
-
-          encoded_content=$( echo $CONTENT | base64 -w 0)
-
-          gh api -X PUT \
-          -H "Accept: application/vnd.github.v3+json" \
-          $repo_full_path \
-          -f message="Update leaderboard via API" \
-          -f content="$encoded_content" \
-          -f branch="main" \
-          -f sha="$current_sha" >> ghout.json
 
 
 
