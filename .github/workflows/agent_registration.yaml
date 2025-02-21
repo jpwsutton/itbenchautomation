@@ -206,20 +206,13 @@ jobs:
         with:
           script: |
 
-            if (process.env.PRIVATE_REPO){
+            if (process.env.PRIVATE_REPO ==  true){
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: process.env.PRIV_REPO_COMMENT_BODY
               })
-            # } else if(process.env.APP_NOT_INSTALLED){
-            #   github.rest.issues.createComment({
-            #     issue_number: context.issue.number,
-            #     owner: context.repo.owner,
-            #     repo: context.repo.repo,
-            #     body: process.env.APP_NOT_INSTALLED_COMMENT_BODY
-            #   })
             } else {
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
