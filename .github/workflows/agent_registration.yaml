@@ -90,6 +90,7 @@ jobs:
             echo "Target repository is set to private."
           else
             echo "Target repository is not set to private. Failing!"
+            echo "error_public_repo=1" >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
@@ -157,6 +158,36 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: process.env.COMMENT_BODY
+            })
+      - name: Report Public repository
+        if: failure() && steps.check-repo-private.outputs.error_public_repo == 1 
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            👋 ${{ github.event.issue.user.login }}
+
+            It looks like the repository you've provided to us is not set to private.
+            As we will be committing a token to your repository, it needs to be set to private before we can continue.
+
+            Please make the nessesary changes and reply back to this issue, our team will then re-start the registration process.
+
+            ----
+
+            Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['error']
             })
 
       - name: Report Failure
