@@ -159,11 +159,26 @@ jobs:
               repo: context.repo.repo,
               body: process.env.COMMENT_BODY
             })
-      - name: Report Public repository
-        if: failure() && steps.check-repo-private.outputs.error_public_repo == 1 
+
+
+      - name: Report Failure
+        if: failure()
         uses: actions/github-script@v7
         env:
+          PRIVATE_REPO:  ${{ steps.check-repo-private.outputs.error_public_repo == 1}}
+          #APP_NOT_INSTALLED: ${{ steps.check-app-installed.outputs.error_not_installed == 1}}
           COMMENT_BODY: |
+            👋 ${{ github.event.issue.user.login }}
+
+            Unfortunately there was an unknown issue with registering the agent.
+
+            This issue has been marked for manual intervention and the team has been notified.
+
+            ----
+
+            Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          PRIV_REPO_COMMENT_BODY: |
             👋 ${{ github.event.issue.user.login }}
 
             It looks like the repository you've provided to us is not set to private.
@@ -174,45 +189,45 @@ jobs:
             ----
 
             Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          # APP_NOT_INSTALLED_COMMENT_BODY: |
+          #   👋 ${{ github.event.issue.user.login }}
+
+          #   It looks like the repository does not have the IT Bench GitHub App installed.
+            
+          #   Please [install the app](https://github.com/apps/ibm-itbench) into your private config repo.
+
+          #   Once the app is installed, comment back on this issue and our team will then re-start the registration process.
+
+          #   ----
+
+          #   Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: process.env.COMMENT_BODY
-            })
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['error']
-            })
 
-      - name: Report Failure
-        if: failure()
-        uses: actions/github-script@v7
-        env:
-          COMMENT_BODY: |
-            👋 ${{ github.event.issue.user.login }}
-
-            Unfortunately there was an issue with registering the agent. 
-
-            This issue has been marked for manual intervention and the team has been notified.
-
-            ----
-
-            Run link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: process.env.COMMENT_BODY
-            })
+            if (process.env.PRIVATE_REPO){
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: process.env.PRIV_REPO_COMMENT_BODY
+              })
+            # } else if(process.env.APP_NOT_INSTALLED){
+            #   github.rest.issues.createComment({
+            #     issue_number: context.issue.number,
+            #     owner: context.repo.owner,
+            #     repo: context.repo.repo,
+            #     body: process.env.APP_NOT_INSTALLED_COMMENT_BODY
+            #   })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: process.env.COMMENT_BODY
+              })
+            }
             github.rest.issues.addLabels({
               issue_number: context.issue.number,
               owner: context.repo.owner,
