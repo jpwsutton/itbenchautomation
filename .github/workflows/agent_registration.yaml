@@ -207,7 +207,8 @@ jobs:
           script: |
             console.log(`Private Repo: ${process.env.PRIVATE_REPO}`)
 
-            if (process.env.PRIVATE_REPO == true){
+            if (process.env.PRIVATE_REPO == 'true'){
+              console.log("Responding with non private repo message.")
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
@@ -215,6 +216,7 @@ jobs:
                 body: process.env.PRIV_REPO_COMMENT_BODY
               })
             } else {
+              console.log("Responding with generic error message.")
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
