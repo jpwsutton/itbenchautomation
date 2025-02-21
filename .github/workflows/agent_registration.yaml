@@ -205,8 +205,9 @@ jobs:
         
         with:
           script: |
+            console.log(`Private Repo: ${process.env.PRIVATE_REPO}`)
 
-            if (process.env.PRIVATE_REPO ==  true){
+            if (process.env.PRIVATE_REPO == true){
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
