@@ -8,6 +8,17 @@ body:
       value: |
         Thank you for your interest in benchmarking an IT Bench Agent. 
         Please fill out this form to request connection details for the IT Bench service.
+
+        ## Important!
+
+        Before you submit this form, you need to have completed the following tasks:
+        1. Create an empty repository in GitHub with visibility set to private
+        2. Install the [ibm-itbench](https://github.com/apps/ibm-itbench) app into that repository.
+
+        Once those two steps have been completed, please complete this form and provide the URL for the
+        repository you created in the relevant section.
+
+        
   - type: input
     id: agent-owner-email
     attributes:
@@ -65,21 +76,10 @@ body:
       label: "Config Repo"
       description: |
         Provide the GitHub Repository URL that we will create data required for benchmark.
-        Please install the `it-bench-gitops-1` GitHub App in the repository described in **Instruction of `it-bench-gitops-1` GitHub App install**.
-      placeholder: "e.g. https://github.ibm.com/your_org/repo_name"
+        Please install the [ibm-itbench](https://github.com/apps/ibm-itbench) GitHub App in the repository before submitting this form!.
+      placeholder: "e.g. https://github.com/your_org/repo_name"
     validations:
       required: true
-  - type: markdown
-    
-    attributes:
-      value: |
-        Once this onboarding request has been approved, we will need a github repository to send your agent connection details to.
-
-        Please follow the following steps:
-
-        1. Create an empty repository, make sure that it is set to private.
-        2. Install this GitHub App into your repository that you just created.
-
       
   - type: markdown
     attributes:
