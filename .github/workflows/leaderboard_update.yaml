@@ -2,6 +2,8 @@ name: Leaderboard Update
 on:
   repository_dispatch:
     types: [update_leaderboard]
+  issues:
+    types: [labeled]
 
 jobs:
   update_leaderboard:
