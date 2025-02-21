@@ -1,0 +1,53 @@
+name: Leaderboard Update
+
+jobs:
+  update_leaderboard:
+    runs-on: ubuntu-latest
+    name: Update the Leaderboard
+    steps:
+      - name: Pull Leaderboard data
+        id: get-leaderboard-data
+        run: |
+          echo "Requesting Leaderboard data from API"
+          # We would make a CURL request to the API to get the csv data here
+          # For now, we'll just mock it
+          csv_data=$(curl https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.csv)
+
+          echo "csv_data=$csv_data" >> "$GITHUB_OUTPUT"
+      - name: convert-csv-to-markdown
+        id: csv-to-markdown
+        uses: petems/csv-to-md-table-action@master
+        with:
+          csvinput: ${{ steps.get-leaderboard-data.outputs.csv_data }}
+      - name: generate-readme
+        id: generate-readme
+        env:
+          CONTENT: |
+            # IT Bench Leaderboard
+
+            ${{steps.csv-to-markdown.outputs.markdown-table}}
+        run: |
+          gh api octocat
+
+          repo_path = "repos/jpwsutton/itbenchautomation/contents/README.md"
+
+          echo "Repo path: $repo_path"
+
+          current_sha=$(gh api $repo_full_path -q '.sha' || echo "")
+          
+          echo "Current SHA: $current_sha"
+
+          encoded_content=$( echo $CONTENT | base64 -w 0)
+
+          gh api -X PUT \
+          -H "Accept: application/vnd.github.v3+json" \
+          $repo_full_path \
+          -f message="Update leaderboard via API" \
+          -f content="$encoded_content" \
+          -f branch="main" \
+          -f sha="$current_sha" >> ghout.json
+
+
+
+      
+      
