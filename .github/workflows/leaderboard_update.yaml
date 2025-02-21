@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Update the Leaderboard
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Pull Leaderboard data
         id: get-leaderboard-data
         run: |
