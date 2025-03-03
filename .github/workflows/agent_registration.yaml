@@ -69,7 +69,7 @@ jobs:
           reg_resp=$(curl --request POST \
             --url $ITBENCH_API/registry/agents \
             --cacert $ITBENCH_CERT \
-            --header 'authorization: Bearer $ITBENCH_TOKEN' \
+            --header "authorization: Bearer $ITBENCH_KEY" \
             --header 'content-type: application/json' \
             --data $agent_body)
 
