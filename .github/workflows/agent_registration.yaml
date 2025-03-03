@@ -56,7 +56,7 @@ jobs:
       - name: mock-generate-manifest
         id: generate-manifest
         run: |
-
+          set -x
           agent_name="${{ fromJson(steps.parse.outputs.payload['Agent Name'])}}"
           agent_type="${{ fromJson(steps.parse.outputs.payload['Agent Type'])}}"
           agent_level="${{ fromJson(steps.parse.outputs.payload['Agent Level'])}}"
