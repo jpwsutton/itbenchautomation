@@ -72,7 +72,7 @@ jobs:
             --header 'content-type: application/json' \
             --data $agent_body)
 
-          echo $reg_resp
+          echo $reg_resp | jq
 
 
 
