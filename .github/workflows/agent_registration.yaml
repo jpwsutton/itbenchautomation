@@ -57,7 +57,7 @@ jobs:
         id: generate-manifest
         run: |
 
-          response_json="${{steps.parse.outputs.payload}}"
+          response_json='${{steps.parse.outputs.payload}}'
 
           agent_body=$(echo $response_json | jq '{"name": ."Agent Name", "type" : ."Agent Type", "level" : ."Agent Level", "scenario_categories" : [."Agent Scenarios" | to_entries[] | select(.value).key]}')
           
