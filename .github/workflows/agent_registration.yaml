@@ -62,6 +62,11 @@ jobs:
           agent_level="${{ fromJson(steps.parse.outputs.payload['Agent Level'])}}"
           agent_scenarios="${{ fromJson(steps.parse.outputs.payload['Agent Scenarios'])}}"
 
+          echo $agent_name
+          echo $agent_type
+          echo $agent_level
+          echo $agent_scenarios
+
           agent_body=$(jq -n --arg name $agent_name --arg type $agent_type --arg level $agent_level --arg scenario_categories $agent_scenarios '{name: $name, type: $type, level: $level, scenario_categories: $scenario_categories }')
           
           manifest_token="this_is_a_placeholder_for_the_token"
