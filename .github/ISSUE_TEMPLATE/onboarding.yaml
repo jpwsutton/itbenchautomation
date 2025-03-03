@@ -64,12 +64,11 @@ body:
       label: Agent Scenarios
       description: You may select more than one, options not applicable to the agent type will be ignored.
       options:
-        - label: (SRE) resource unavailability
-        - label: (CISO) Kubernetes in Kyverno
-        - label: (CISO) Kubernetes in OPA
-        - label: (CISO) Kubernetes in Kyverno Update
-        - label: (CISO) RHEL9 in OPA
-        - label: (FinOps) Something
+        - label: resource unavailability
+        - label: Kubernetes in Kyverno
+        - label: Kubernetes in OPA
+        - label: Kubernetes in Kyverno Update
+        - label: RHEL9 in OPA
   - type: input
     id: repo_url
     attributes:

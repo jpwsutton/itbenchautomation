@@ -71,9 +71,19 @@ jobs:
             --cacert $ITBENCH_CERT \
             --header "authorization: Bearer $ITBENCH_KEY" \
             --header 'content-type: application/json' \
-            --data '$agent_body' -v)
+            --data $agent_body)
 
+          if [[ $? -eq 0 ]]; then
+            echo "Request was successful"
+          else
+            echo "Request failed."
+          fi
+          
           echo $reg_resp | jq
+
+            
+
+         
 
 
 
