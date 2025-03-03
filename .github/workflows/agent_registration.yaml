@@ -53,7 +53,7 @@ jobs:
               repo: context.repo.repo,
               labels: ['registering']
             })
-      - name: mock-generate-manifest
+      - name: generate-manifest
         id: generate-manifest
         run: |
 
@@ -75,29 +75,27 @@ jobs:
 
           if [[ $? -eq 0 ]]; then
             echo "Request was successful"
+
+            agent_manifest=$(echo $reg_resp | jq '.agent_manifest')
+            echo "Printing Agent Manifest"
+            echo $agent_manifest
+
+            echo "manifest=$( echo $agent_manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
+            agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
+            agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
+            agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
+            echo $agent_repo_owner
+            echo $agent_repo_name
+            echo "agent_repo_owner=$agent_repo_owner" >> "$GITHUB_OUTPUT"
+            echo "agent_repo_name=$agent_repo_name" >> "$GITHUB_OUTPUT"
+
           else
             echo "Request failed."
+            echo $reg_resp
+            exit 1
           fi
+
           
-          echo $reg_resp | jq
-
-            
-
-         
-
-
-
-          manifest_token="this_is_a_placeholder_for_the_token"
-          manifest_endpoint="https://ibm.com"
-          manifest=$(jq -n --arg token $manifest_token --arg manifest_endpoint $manifest_endpoint '{token: $token, manifest_endpoint: $manifest_endpoint}')
-          echo "manifest=$( echo $manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
-          agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
-          agent_repo_owner="$(echo $agent_repo | awk -F/ '{print $4}')"
-          agent_repo_name="$(echo $agent_repo | awk -F/ '{print $5}')"
-          echo $agent_repo_owner
-          echo $agent_repo_name
-          echo "agent_repo_owner=$agent_repo_owner" >> "$GITHUB_OUTPUT"
-          echo "agent_repo_name=$agent_repo_name" >> "$GITHUB_OUTPUT"
 
       - name: Generate GitHub token on behalf of repo
         id: generate-token
