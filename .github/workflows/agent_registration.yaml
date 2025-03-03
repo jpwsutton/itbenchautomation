@@ -63,6 +63,19 @@ jobs:
           
           echo $agent_body | jq
 
+          echo "Registering Agent with IT Bench API"
+
+          reg_resp=$(curl --request POST \
+            --url $ITBENCH_API/registry/agents \
+            --cacert $ITBENCH_CERT \
+            --header 'authorization: Bearer $ITBENCH_TOKEN' \
+            --header 'content-type: application/json' \
+            --data $agent_body)
+
+          echo $reg_resp
+
+
+
           manifest_token="this_is_a_placeholder_for_the_token"
           manifest_endpoint="https://ibm.com"
           manifest=$(jq -n --arg token $manifest_token --arg manifest_endpoint $manifest_endpoint '{token: $token, manifest_endpoint: $manifest_endpoint}')
