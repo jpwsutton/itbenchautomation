@@ -64,6 +64,7 @@ jobs:
           echo $agent_body | jq
 
           echo "Registering Agent with IT Bench API"
+          echo "$ITBENCH_API"
 
           reg_resp=$(curl --request POST \
             --url $ITBENCH_API/registry/agents \
