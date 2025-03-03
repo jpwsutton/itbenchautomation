@@ -71,7 +71,7 @@ jobs:
             --cacert $ITBENCH_CERT \
             --header "authorization: Bearer $ITBENCH_KEY" \
             --header 'content-type: application/json' \
-            --data $agent_body)
+            --data $agent_body -v)
 
           echo $reg_resp | jq
 
