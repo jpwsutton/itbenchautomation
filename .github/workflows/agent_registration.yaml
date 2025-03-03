@@ -66,12 +66,12 @@ jobs:
           echo "Registering Agent with IT Bench API"
           echo "$ITBENCH_API"
 
-          reg_resp=$(curl --request POST \
+          reg_resp=$(curl \
             --url $ITBENCH_API/registry/agents \
             --cacert $ITBENCH_CERT \
             --header "authorization: Bearer $ITBENCH_KEY" \
             --header 'content-type: application/json' \
-            --data $agent_body -v)
+            --data '$agent_body' -v)
 
           echo $reg_resp | jq
 
