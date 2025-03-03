@@ -59,7 +59,7 @@ jobs:
           agent_name="${{ fromJson(steps.parse.outputs.payload)['Agent Name']}}"
           agent_type="${{ fromJson(steps.parse.outputs.payload)['Agent Type']}}"
           agent_level="${{ fromJson(steps.parse.outputs.payload)['Agent Level']}}"
-          scenario_list=$(echo '${{steps.parse.outputs.payload}}' | jq '."Agent Scenarios" | to_entries[] | select(.value).key')
+          scenario_list=$(echo '${{steps.parse.outputs.payload}}' | jq '[."Agent Scenarios" | to_entries[] | select(.value).key]')
 
           agent_body=$(jq -n --arg name $agent_name --arg type $agent_type --arg level $agent_level --arg scenario_categories $scenario_list '{name: $name, type: $type, level: $level, scenario_categories: $scenario_categories }')
           
