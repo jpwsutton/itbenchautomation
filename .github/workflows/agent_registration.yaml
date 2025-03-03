@@ -56,12 +56,10 @@ jobs:
       - name: mock-generate-manifest
         id: generate-manifest
         run: |
-          agent_name="${{ fromJson(steps.parse.outputs.payload)['Agent Name']}}"
-          agent_type="${{ fromJson(steps.parse.outputs.payload)['Agent Type']}}"
-          agent_level="${{ fromJson(steps.parse.outputs.payload)['Agent Level']}}"
-          scenario_list=$(echo '${{steps.parse.outputs.payload}}' | jq '[."Agent Scenarios" | to_entries[] | select(.value).key]')
 
-          agent_body=$(jq -n --arg name $agent_name --arg type $agent_type --arg level $agent_level --arg scenario_categories $scenario_list '{name: $name, type: $type, level: $level, scenario_categories: $scenario_categories }')
+          response_json="${{steps.parse.outputs.payload}}"
+
+          agent_body=$(echo $response_json | jq '{"name": ."Agent Name", "type" : ."Agent Type", "level" : ."Agent Level", "scenario_categories" : [."Agent Scenarios" | to_entries[] | select(.value).key]}')
           
           echo $agent_body | jq
 
