@@ -77,7 +77,7 @@ jobs:
             echo "Request was successful"
             echo $reg_resp |  jq
 
-            agent_manifest=$(echo $reg_resp | jq '.agent_manifest')
+            agent_manifest=$(echo $reg_resp | jq '.spec.agent_manifest')
             echo "Printing Agent Manifest"
             echo $agent_manifest
 
