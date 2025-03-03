@@ -60,12 +60,12 @@ jobs:
           agent_type="${{ fromJson(steps.parse.outputs.payload)['Agent Type']}}"
           agent_level="${{ fromJson(steps.parse.outputs.payload)['Agent Level']}}"
           agent_scenarios="${{ fromJson(steps.parse.outputs.payload)['Agent Scenarios']}}"
-          scenario_list=$(echo $agent_scenarios | jq '. | to_entries[] | select(.value).key)')
+          scenario_list=$(echo fromJson(steps.parse.outputs.payload) | jq '."Agent Scenarios" | to_entries[] | select(.value).key)')
 
           agent_body=$(jq -n --arg name $agent_name --arg type $agent_type --arg level $agent_level --arg scenario_categories $scenario_list '{name: $name, type: $type, level: $level, scenario_categories: $scenario_categories }')
           
           echo $agent_body | jq
-          
+
           manifest_token="this_is_a_placeholder_for_the_token"
           manifest_endpoint="https://ibm.com"
           manifest=$(jq -n --arg token $manifest_token --arg manifest_endpoint $manifest_endpoint '{token: $token, manifest_endpoint: $manifest_endpoint}')
