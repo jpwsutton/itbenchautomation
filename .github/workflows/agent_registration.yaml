@@ -57,14 +57,13 @@ jobs:
         id: generate-manifest
         run: |
 
+          echo "Registering Agent with IT Bench API"
+
           response_json='${{steps.parse.outputs.payload}}'
 
           agent_body=$(echo $response_json | jq '{"name": ."Agent Name", "type" : ."Agent Type", "level" : ."Agent Level", "scenario_categories" : [."Agent Scenarios" | to_entries[] | select(.value).key]}')
           
           echo $agent_body | jq
-
-          echo "Registering Agent with IT Bench API"
-          echo "$ITBENCH_API"
 
           reg_resp=$(curl \
             --url $ITBENCH_API/registry/agents \
@@ -75,11 +74,11 @@ jobs:
 
           if [[ $? -eq 0 ]]; then
             echo "Request was successful"
-            echo $reg_resp |  jq
+            #echo $reg_resp |  jq
 
             agent_manifest=$(echo $reg_resp | jq '.spec.agent_manifest')
-            echo "Printing Agent Manifest"
-            echo $agent_manifest
+            #echo "Printing Agent Manifest"
+            #echo $agent_manifest
 
             echo "manifest=$( echo $agent_manifest | base64 -w 0)" >> "$GITHUB_OUTPUT"
             agent_repo="${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}"
@@ -131,7 +130,6 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
-          set -x
           gh api octocat
 
           repo_full_path="repos/${{ steps.generate-manifest.outputs.agent_repo_owner}}/${{ steps.generate-manifest.outputs.agent_repo_name}}/contents/agent-manifest.json"
