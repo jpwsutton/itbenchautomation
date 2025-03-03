@@ -75,6 +75,7 @@ jobs:
 
           if [[ $? -eq 0 ]]; then
             echo "Request was successful"
+            echo $reg_resp |  jq
 
             agent_manifest=$(echo $reg_resp | jq '.agent_manifest')
             echo "Printing Agent Manifest"
