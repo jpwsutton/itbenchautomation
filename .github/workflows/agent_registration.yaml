@@ -66,9 +66,9 @@ jobs:
           echo $agent_body | jq
 
           reg_resp=$(curl \
-            --url $ITBENCH_API/registry/agents \
+            --url ${{vars.ITBENCH_API}}/registry/agents \
             --cacert $ITBENCH_CERT \
-            --header "authorization: Bearer $ITBENCH_KEY" \
+            --header "authorization: Bearer ${{ secrets.ITBENCH_API_TOKEN }}" \
             --header 'content-type: application/json' \
             --data "$agent_body")
 
