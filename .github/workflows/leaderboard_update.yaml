@@ -1,60 +1,44 @@
 name: Leaderboard Update
 on:
-  repository_dispatch:
-    types: [update_leaderboard]
-  issues:
-    types: [labeled]
+  workflow_dispatch
 
 jobs:
   update_leaderboard:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    environment: onboarding
     name: Update the Leaderboard
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Pull Leaderboard data
         id: get-leaderboard-data
+        env:
+          ITBENCH_API: ${{vars.ITBENCH_API}}
+          ITBENCH_API_TOKEN: ${{ secrets.ITBENCH_API_TOKEN }}
         run: |
           echo "Requesting Leaderboard data from API"
-          # We would make a CURL request to the API to get the csv data here
-          # For now, we'll just mock it
-        
 
-            if curl -o leaderboard.csv https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.csv; then
-              echo "CSV download successful."
-            else
-              echo "CSV download failed."
-              exit 1
-            fi
+          leaderboard_md=$(python ./.github/workflows/leaderboard.py)
 
-      - name: Read CSV
-        id: csv
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./leaderboard.csv
+          echo "leaderboard_md=$leaderboard_md" >> "$GITHUB_OUTPUT"
 
-         
-      - name: convert-csv-to-markdown
-        id: csv-to-markdown
-        uses: petems/csv-to-md-table-action@master
-        with:
-          csvinput: ${{ steps.csv.outputs.content }}
+          echo "Complete"
       - name: generate-readme
         id: generate-readme
         env:
           CONTENT: |
             # IT Bench Leaderboard
 
-            ${{steps.csv-to-markdown.outputs.markdown-table}}
+            ${{leaderboard_md}}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          echo "$CONTENT" > README.md
+          echo "$CONTENT" > LEADERBOARD.md
 
           git checkout main
 
-          git add README.md
+          git add LEADERBOARD.md
 
           git commit -m "Update leaderboard"
 
