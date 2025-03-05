@@ -18,11 +18,9 @@ jobs:
         run: |
           echo "Requesting Leaderboard data from API"
 
-          leaderboard_md=$(python ./.github/workflows/leaderboard.py)
+          python ./.github/workflows/leaderboard.py >> leaderboard_raw.md
 
-          echo "leaderboard_md=$leaderboard_md" >> "$GITHUB_OUTPUT"
-
-          echo "Complete"
+         
       - name: generate-readme
         id: generate-readme
         env:
@@ -34,7 +32,11 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          echo "$CONTENT" > LEADERBOARD.md
+
+          echo "# IT Bench leaderboard" > LEADERBOARD.md
+          echo "" >> LEADERBOARD.md
+          cat leaderboard_raw.md >> LEADERBOARD.md
+         
 
           git checkout main
 
