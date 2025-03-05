@@ -36,7 +36,7 @@ def print_table(data):
     header_len = len(headers)
     print('-' * header_len)
     print(headers)
-    print('-' * header_len)
+    print(line_fmt.format(*("---" * 7)))
     for bench_line in data:
         print(line_fmt.format(*bench_line))
 
