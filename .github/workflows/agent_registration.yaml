@@ -95,8 +95,8 @@ jobs:
         env: 
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run : |
-           repo_full_path="repos/${{ steps.extract-parsed-data.outputs.agent_repo_owner}}/${{ steps.extract-parsed-data.outputs.agent_repo_name}}"
-           repo_collaborators=$(gh api $repo_full_pa -q '[.[].login] |  contains(["${{ github.event.issue.user.login }}"])')
+           repo_full_path="repos/${{ steps.extract-parsed-data.outputs.agent_repo_owner}}/${{ steps.extract-parsed-data.outputs.agent_repo_name}}/collaborators"
+           repo_collaborators=$(gh api $repo_full_path -q '[.[].login] |  contains(["${{ github.event.issue.user.login }}"])')
 
            echo "Issue creator is collaborator: $repo_collaborators"
 
