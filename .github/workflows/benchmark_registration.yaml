@@ -176,8 +176,8 @@ jobs:
             Here are the Details:
 
 
-            Name:  ${{ steps.register-benchmark.outputs.benchmark_name) }}
-            Type:  ${{ steps.register-benchmark.outputs.benchmark_id) }}
+            Name:  ${{ steps.register-benchmark.outputs.benchmark_name }}
+            Type:  ${{ steps.register-benchmark.outputs.benchmark_id }}
            
 
         
