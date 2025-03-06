@@ -130,6 +130,8 @@ jobs:
           
           echo $benchmark_body | jq
 
+          echo ${{vars.ITBENCH_API}}/registry/create-benchmark
+
           reg_resp=$(curl \
             --url ${{vars.ITBENCH_API}}/registry/create-benchmark \
             --header "authorization: Bearer ${{ secrets.ITBENCH_API_TOKEN }}" \
