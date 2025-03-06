@@ -112,11 +112,11 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run : |
            repo_full_path="repos/${{ steps.extract-parsed-data.outputs.agent_repo_owner}}/${{ steps.extract-parsed-data.outputs.agent_repo_name}}/contents/agent-manifest.json"
-           agent_name=$(gh api $repo_full_path -q '.content' | base64 -d | jq '.name')
+           agent_id=$(gh api $repo_full_path -q '.content' | base64 -d | jq '.metadata.id')
 
-           echo "Agent Name: $agent_name"
+           echo "Agent ID: $agent_id"
            
-           echo "agent_name=$agent_name" >> "$GITHUB_OUTPUT"
+           echo "agent_id=$agent_id" >> "$GITHUB_OUTPUT"
 
       - name: register-benchmark
         id: register-benchmark
@@ -126,7 +126,7 @@ jobs:
 
           response_json='${{steps.parse.outputs.payload}}'
 
-          benchmark_body=$(echo $response_json | jq  '{ "name" : ."Benchmark Name", "immediate" : ."Schedule Now"}' | jq --arg AGENT_NAME ${{steps.get-agent-config.outputs.agent_name}} '. += {"agent_id": $AGENT_NAME}')
+          benchmark_body=$(echo $response_json | jq  '{ "name" : ."Benchmark Name", "immediate" : ."Schedule Now"}' | jq --arg AGENT_ID ${{steps.get-agent-config.outputs.agent_id}} '. += {"agent_id": $AGENT_ID}')
           
           echo $benchmark_body | jq
 
