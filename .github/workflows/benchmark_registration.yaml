@@ -136,6 +136,8 @@ jobs:
             --header 'content-type: application/json' \
             --data "$benchmark_body")
 
+          echo $reg_resp
+
           if [[ $? -eq 0 ]]; then
           
             echo "Request was successful"
