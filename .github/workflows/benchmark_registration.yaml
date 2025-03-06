@@ -126,7 +126,7 @@ jobs:
 
           response_json='${{steps.parse.outputs.payload}}'
 
-          benchmark_body=$(echo $response_json | jq --arg AGENT_NAME "${{steps.get-agent-config.outputs.agent_name}}" '{ "name" : ."Benchmark Name", "immediate" : ."Schedule Now"} += {"agent_id": $AGENT_NAME}')
+          benchmark_body=$(echo $response_json | jq  '{ "name" : ."Benchmark Name", "immediate" : ."Schedule Now"}' | jq --arg AGENT_NAME ${{steps.get-agent-config.outputs.agent_name}} '. += {"agent_id": $AGENT_NAME}')
           
           echo $benchmark_body | jq
 
