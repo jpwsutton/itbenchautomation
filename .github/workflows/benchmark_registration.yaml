@@ -1,4 +1,4 @@
-name: Register a new agent
+name: Register a new agent benchmark
 
 on:
   issues:
