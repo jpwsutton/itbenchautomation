@@ -132,7 +132,6 @@ jobs:
 
           reg_resp=$(curl \
             --url ${{vars.ITBENCH_API}}/registry/create-benchmark \
-            --cacert $ITBENCH_CERT \
             --header "authorization: Bearer ${{ secrets.ITBENCH_API_TOKEN }}" \
             --header 'content-type: application/json' \
             --data "$benchmark_body")
