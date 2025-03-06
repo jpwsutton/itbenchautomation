@@ -6,11 +6,11 @@ on:
 
 jobs:
   register_agent:
-    if: github.event.label.name == 'approved' && contains(github.event.issue.labels.*.name, 'registration')
+    if: github.event.label.name == 'approved' && contains(github.event.issue.labels.*.name, 'benchmark')
     # The type of runner that the job will run on
     runs-on: self-hosted
     environment: onboarding
-    name: Registers an Agent
+    name: Registers a benchmark
     steps:
       - name: Parse issue
         id: parse
@@ -36,14 +36,13 @@ jobs:
           COMMENT_BODY: |
             👋 ${{ github.event.issue.user.login }}
 
-            Thank you for submitting your agent registration details, we are currently processing your request and will
-            be in contact shortly with connection details for your agent harness to use to connect to the IT Bench service.
+            Thank you for submitting your benchmark registration details, we are currently processing your request and will
+            comment back once the registration has been completed.
 
-            ## Agent Details:
+            ## Benchmark Details:
 
-            Name:  ${{ fromJson(steps.parse.outputs.payload)['Agent Name'] }}
-            Type:  ${{ fromJson(steps.parse.outputs.payload)['Agent Type'] }}
-            Level:  ${{ fromJson(steps.parse.outputs.payload)['Agent Level'] }}
+            Name:  ${{ fromJson(steps.parse.outputs.payload)['Benchmark Name'] }}
+            Schedule now?  ${{ fromJson(steps.parse.outputs.payload)['Schedule Now'] }}
 
             Target Config Repo: ${{ fromJson(steps.parse.outputs.payload)['Config Repo']}}
         
@@ -107,15 +106,15 @@ jobs:
               exit 1
             fi
 
-      - name: generate-manifest
-        id: generate-manifest
+      - name: register-benchmark
+        id: register-benchmark
         run: |
 
-          echo "Registering Agent with IT Bench API"
+          echo "Registering Benchmark request with IT Bench API"
 
           response_json='${{steps.parse.outputs.payload}}'
 
-          agent_body=$(echo $response_json | jq '{"name": ."Agent Name", "type" : ."Agent Type", "level" : ."Agent Level", "scenario_categories" : [."Agent Scenarios" | to_entries[] | select(.value).key]}')
+          agent_body=$(echo $response_json | jq '{"agent_id": ."<TODO AGENT ID>", "name" : ."Benchmark Name", "immediate" : ."Schedule Now"}')
           
           echo $agent_body | jq
 
@@ -135,7 +134,7 @@ jobs:
 
             if [[ $? -eq 0 ]]; then
 
-              agent_manifest=$(echo $reg_resp | jq '.spec')
+              agent_manifest=$(echo $reg_resp | jq '.spec.agent_manifest')
               #echo "Printing Agent Manifest"
               #echo $agent_manifest
 
