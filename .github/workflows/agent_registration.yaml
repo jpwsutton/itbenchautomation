@@ -120,7 +120,7 @@ jobs:
           echo $agent_body | jq
 
           reg_resp=$(curl \
-            --url ${{vars.ITBENCH_API}}/registry/agents \
+            --url ${{vars.ITBENCH_API}}/gitops/agents?github_username=${{ github.event.issue.user.login }} \
             --header "authorization: Bearer ${{ secrets.ITBENCH_API_TOKEN }}" \
             --header 'content-type: application/json' \
             --data "$agent_body")

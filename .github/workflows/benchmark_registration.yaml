@@ -130,7 +130,7 @@ jobs:
           
           echo $benchmark_body | jq
 
-          echo ${{vars.ITBENCH_API}}/registry/create-benchmark
+          echo ${{vars.ITBENCH_API}}/gitops/create-benchmark?github_username=${{ github.event.issue.user.login }}
 
           reg_resp=$(curl \
             --url ${{vars.ITBENCH_API}}/registry/create-benchmark \
