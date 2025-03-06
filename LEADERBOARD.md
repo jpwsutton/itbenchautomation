@@ -1,5 +1,9 @@
 # IT Bench leaderboard
 
+
+Updated on: 05/03/2025 12:27:00 
+
+
 ----------------------------------------------------------------------------------------------------------------------------------
 |     Agent     |   Benchmark   |    Scenario Category    |  % Resolved   | Mean Processing Time |    Passed     |     Date      |
 |       -       |       -       |            -            |       -       |       -       |       -       |       -       |
