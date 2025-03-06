@@ -97,6 +97,12 @@ flowchart TD
         - Read and write permissions
     - Runners (If using an external runner)
         - Create the runner using default options.
+5. In the issues view create the following labels:
+    - `approved`
+    - `benchmark`
+    - `error`
+    - `registering`
+    - `registration`
 
 
 ### Self hosted runners

@@ -1,17 +1,17 @@
 import json
 import os
 import urllib.request
-import ssl
+#import ssl
 import argparse
 
 ITBENCH_API = os.getenv("ITBENCH_API")
 ITBENCH_API_TOKEN = os.getenv("ITBENCH_API_TOKEN")
-ITBENCH_CERT = os.getenv("ITBENCH_CERT")
+#ITBENCH_CERT = os.getenv("ITBENCH_CERT")
 
 
 def get_leaderboard(leaderboard_id: str = None):
     # Required as the current IT Bench server is not using a trusted certificate
-    ssl_context = ssl.create_default_context(cafile=ITBENCH_CERT)
+    #ssl_context = ssl.create_default_context(cafile=ITBENCH_CERT)
     url = f"{ITBENCH_API}/registry/aggregate-results"
     if leaderboard_id is not None:
         url += f"?benchmark_id={leaderboard_id}"
@@ -19,7 +19,8 @@ def get_leaderboard(leaderboard_id: str = None):
         "Authorization" : f"Bearer {ITBENCH_API_TOKEN}"
     }
     req = urllib.request.Request(url=url, headers=headers, method="GET")
-    res = urllib.request.urlopen(req, timeout=10, context=ssl_context)
+    #res = urllib.request.urlopen(req, timeout=10, context=ssl_context) # Use this if using internal server
+    res = urllib.request.urlopen(req, timeout=10)
     
     if res.getcode() != 200:
         print(f"Error requesting leaderboard JSON: {res.status_code}. {res.content}")

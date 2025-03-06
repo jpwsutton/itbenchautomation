@@ -4,7 +4,7 @@ on:
 
 jobs:
   update_leaderboard:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: onboarding
     name: Update the Leaderboard
     steps:
