@@ -36,8 +36,8 @@ body:
       label: Schedule Now
       description: Do you want this benchmark to be immediately scheduled?
       options:
-        - Yes
-        - No
+        - 'true'
+        - 'false'
       default: 0
     validations:
       required: true
